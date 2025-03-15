@@ -70,8 +70,8 @@ static int tpd_wb_end_local[TPD_WARP_CNT] = TPD_WARP_END;
 /* static int tpd_def_calmat_local[8] = TPD_CALIBRATION_MATRIX; */
 static int tpd_def_calmat_local_normal[8] =
 	TPD_CALIBRATION_MATRIX_ROTATION_NORMAL;
-static int tpd_def_calmat_local_factory[8] =
-	TPD_CALIBRATION_MATRIX_ROTATION_FACTORY;
+static int tpd_def_calmat_local_normal[8] =
+	TPD_CALIBRATION_MATRIX_ROTATION_NORMAL;
 #endif
 
 static irqreturn_t tpd_interrupt_handler(int irq, void *dev_id);
@@ -1347,8 +1347,8 @@ static void tpd_down(s32 x, s32 y, s32 size, s32 id)
 
 #ifdef CONFIG_MTK_BOOT
 	if (tpd_dts_data.use_tpd_button) {
-		if (get_boot_mode() == FACTORY_BOOT ||
-		    get_boot_mode() == RECOVERY_BOOT)
+		if (get_boot_mode() == NORMAL_BOOT ||
+		    get_boot_mode() == NORMAL_BOOT)
 			tpd_button(x, y, 1);
 	}
 #endif
@@ -1369,8 +1369,8 @@ static void tpd_up(s32 x, s32 y, s32 id)
 
 #ifdef CONFIG_MTK_BOOT
 	if (tpd_dts_data.use_tpd_button) {
-		if (get_boot_mode() == FACTORY_BOOT ||
-		    get_boot_mode() == RECOVERY_BOOT)
+		if (get_boot_mode() == NORMAL_BOOT ||
+		    get_boot_mode() == NORMAL_BOOT)
 			tpd_button(x, y, 0);
 	}
 #endif
@@ -1649,10 +1649,10 @@ static int tpd_local_init(void)
 /* memcpy(tpd_def_calmat, tpd_def_calmat_local, 8 * 4); */
 
 #ifdef CONFIG_MTK_BOOT
-	if (get_boot_mode() == FACTORY_BOOT) {
-		TPD_DEBUG("Factory mode is detected!\n");
-		memcpy(tpd_calmat, tpd_def_calmat_local_factory, 8 * 4);
-		memcpy(tpd_def_calmat, tpd_def_calmat_local_factory, 8 * 4);
+	if (get_boot_mode() == NORMAL_BOOT) {
+		TPD_DEBUG("normal mode is detected!\n");
+		memcpy(tpd_calmat, tpd_def_calmat_local_normal, 8 * 4);
+		memcpy(tpd_def_calmat, tpd_def_calmat_local_normal, 8 * 4);
 	} else {
 #endif
 		TPD_DEBUG("Normal mode is detected!\n");
