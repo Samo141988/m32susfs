@@ -27,16 +27,11 @@
 #include <linux/task_work.h>
 #include <linux/sched/task.h>
 #include <linux/fslog.h>
+
 #if defined(CONFIG_KSU_SUSFS_SUS_MOUNT) || defined(CONFIG_KSU_SUSFS_TRY_UMOUNT)
 #include <linux/susfs_def.h>
 #endif
-#ifdef CONFIG_KDP_NS
-#include <linux/slub_def.h>
-#include <linux/kdp.h>
-#endif
-#ifdef CONFIG_RUSTUH_KDP_NS
-#include <linux/rustkdp.h>
-#endif
+
 #include "pnode.h"
 #include "internal.h"
 
@@ -64,28 +59,6 @@ bool susfs_is_auto_add_sus_bind_mount_enabled = true;
 #ifdef CONFIG_KSU_SUSFS_AUTO_ADD_TRY_UMOUNT_FOR_BIND_MOUNT
 extern void susfs_auto_add_try_umount_for_bind_mount(struct path *path);
 bool susfs_is_auto_add_try_umount_for_bind_mount_enabled = true;
-#endif
-
-#ifdef CONFIG_KDP_NS
-#define KDP_MOUNT_SYSTEM "/system"
-#define KDP_MOUNT_SYSTEM_LEN strlen(KDP_MOUNT_SYSTEM)
-
-#define KDP_MOUNT_SYSTEM2 "/root" //system-as-root
-#define KDP_MOUNT_SYSTEM2_LEN strlen(KDP_MOUNT_SYSTEM2)
-
-#define KDP_MOUNT_PRODUCT "/product"
-#define KDP_MOUNT_PRODUCT_LEN strlen(KDP_MOUNT_PRODUCT)
-
-#define KDP_MOUNT_VENDOR "/vendor"
-#define KDP_MOUNT_VENDOR_LEN strlen(KDP_MOUNT_VENDOR)
-
-#define KDP_MOUNT_ART "/apex/com.android.runtime"
-#define KDP_MOUNT_ART_LEN strlen(KDP_MOUNT_ART)
-
-#define KDP_MOUNT_ART2 "/com.android.runtime@1"
-#define KDP_MOUNT_ART2_LEN strlen(KDP_MOUNT_ART2)
-
-#define ART_ALLOW 2
 #endif
 
 /* Maximum number of mounts in a mount namespace */
@@ -1559,6 +1532,7 @@ static struct mount *clone_mnt(struct mount *old, struct dentry *root,
 #if defined(CONFIG_KDP_NS) || defined(CONFIG_RUSTUH_KDP_NS)
 	int nsflags;
 #endif
+
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
 	bool is_current_ksu_domain = susfs_is_current_ksu_domain();
 	bool is_current_zygote_domain = susfs_is_current_zygote_domain();
@@ -1609,16 +1583,8 @@ bypass_orig_flow:
 		return ERR_PTR(-ENOMEM);
 
 	if (sb->s_op->clone_mnt_data) {
-#ifdef CONFIG_KDP_NS
-		rkp_set_data(mnt->mnt, sb->s_op->clone_mnt_data(old->mnt->data));
-		if (!mnt->mnt->data) {
-#elif defined(CONFIG_RUSTUH_KDP_NS)
-		kdp_set_ns_data(mnt->mnt, sb->s_op->clone_mnt_data(old->mnt->data));
-		if (!mnt->mnt->data) {
-#else
 		mnt->mnt.data = sb->s_op->clone_mnt_data(old->mnt.data);
 		if (!mnt->mnt.data) {
-#endif
 			err = -ENOMEM;
 			goto out_free;
 		}
@@ -3897,6 +3863,7 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
 	copy_flags = CL_COPY_UNBINDABLE | CL_EXPIRE;
 	if (user_ns != ns->user_ns)
 		copy_flags |= CL_SHARED_TO_SLAVE | CL_UNPRIVILEGED;
+
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
 	// Always let clone_mnt() in copy_tree() know it is from copy_mnt_ns()
 	copy_flags |= CL_COPY_MNT_NS;
@@ -3905,6 +3872,7 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
 		copy_flags |= CL_ZYGOTE_COPY_MNT_NS;
 	}
 #endif
+
 #if defined(CONFIG_KDP_NS) || defined(CONFIG_RUSTUH_KDP_NS)
 	new = copy_tree(old, old->mnt->mnt_root, copy_flags);
 #else
