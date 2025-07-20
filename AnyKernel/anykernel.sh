@@ -4,7 +4,7 @@
 ### AnyKernel setup
 # global properties
 properties() { '
-kernel.string=Rissu Kernel for M325FV @ yukiprjkt-developers
+kernel.string= Kernel for M325FV
 do.devicecheck=0
 do.modules=0
 do.systemless=0
@@ -15,7 +15,7 @@ device.name2=
 device.name3=
 device.name4=
 device.name5=
-supported.versions=13
+supported.versions=
 supported.patchlevels=
 supported.vendorpatchlevels=
 '; } # end properties
