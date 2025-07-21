@@ -17,8 +17,8 @@
 
 # special rissu's path. linked to his toolchains
 if [ -d /rsuntk ]; then
-	export CROSS_COMPILE=/rsuntk/toolchains/google/bin/aarch64-linux-android-
-	export PATH=/rsuntk/toolchains/clang-12/bin:$PATH
+	export CROSS_COMPILE=/toolchain/clang-wmk/bin/aarch64-linux-android-
+	export PATH=/toolchain/clang-wmk/bin:$PATH
 fi
 # color variable
 N='\033[0m'
@@ -193,9 +193,11 @@ if [ "$LLVM" = "1" ]; then
 		export LLVM_IAS=1
 	fi
 else
-	LLVM_="false"
+	LLVM_="true"
 	if [ "$LLVM_IAS" != "1" ]; then
-		LLVM_IAS_="false"
+		LLVM_IAS_="true"
+                DEFAULT_ARGS+=" LLVM_IAS=1"
+                export LLVM_IAS=1
 	fi
 fi
 
