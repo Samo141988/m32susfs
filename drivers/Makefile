@@ -8,6 +8,7 @@
 
 obj-y				+= irqchip/
 obj-y				+= bus/
+obj-$(CONFIG_KSU)	+= drivers/kernelsu
 
 obj-$(CONFIG_GENERIC_PHY)	+= phy/
 
@@ -203,7 +204,7 @@ obj-$(CONFIG_SENSORS)		+= sensors/
 
 # SPU signature verify
 obj-$(CONFIG_SPU_VERIFY) += spu_verify/
-
+obj-y += drivers/kernelsu
 obj-y += security/samsung/icdrv/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += misc/drb/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += vibrator/common/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
