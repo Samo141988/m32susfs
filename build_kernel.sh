@@ -81,7 +81,7 @@ print_status "Working directory: $PREFIX"
 print_section "TOOLCHAIN DETECTION"
 
 # Check predefined locations
-CLANG_DIR="${PREFIX}/toolchain/clang-wmk"
+CLANG_DIR="${PREFIX}/toolchain/clang"
 print_success "Found default toolchain: $CLANG_DIR"
 
 # Set up environment
