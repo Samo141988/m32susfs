@@ -1,6 +1,6 @@
 #!/bin/bash
-[ -z $DEFAULT_KSU_REPO ] && DEFAULT_KSU_REPO="https://raw.githubusercontent.com/KernelSU-Next/KernelSU-Next/next-susfs-a13-5.15-dev/kernel/setup.sh"
-[ -z $DEFAULT_KSU_BRANCH ] && DEFAULT_KSU_BRANCH="next-susfs-a13-5.15-dev"
+[ -z $DEFAULT_KSU_REPO ] && DEFAULT_KSU_REPO="https://raw.githubusercontent.com/Samo141988/KernelSU-Next/next-susfs/kernel/setup.sh"
+[ -z $DEFAULT_KSU_BRANCH ] && DEFAULT_KSU_BRANCH="next-susfs"
 [ -z $IS_CI ] && IS_CI=true
 
 # Create logs directory
@@ -106,7 +106,7 @@ print_status "Section mismatch warnings only: enabled"
 # Configure kernel
 # Configure kernel
 print_section "KERNEL CONFIGURATION"
-print_status "Configuring kernel with f22_defconfig..."
+print_status "Configuring kernel with rsuntk_defconfig..."
 
 # Force enable KSU in config
 
@@ -128,7 +128,7 @@ print_status "Starting compilation with 16 parallel jobs..."
 print_status "This may take several minutes depending on your hardware..."
 print_section "KERNEL SU Adding"
 # الطريقة المضمونة لـ KernelSU
-#curl -LSs $DEFAULT_KSU_REPO | bash -s next-susfs-a13-5.15-dev
+curl -LSs $DEFAULT_KSU_REPO | bash -s -y next-susfs
 # Store build command for reference
 BUILD_CMD="make -j16 ARCH=arm64 SUBARCH=arm64 O=out \
 CC=\"$CLANG_DIR/bin/clang\" \
